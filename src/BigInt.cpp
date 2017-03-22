@@ -4,6 +4,8 @@
 #include <cctype>
 #include <exception>
 
+#include <iostream>
+
 static void make_equal_length(std::string &str1, std::string &str2)
 {
 	const int delta_size = str1.size() - str2.size();
@@ -37,7 +39,13 @@ BigInt::BigInt() :
 
 BigInt::BigInt(const std::string &str)
 {
-	if (str.at(0) == '-')
+	if (str == "")
+	{
+		number = "0";
+		is_negative = false;
+		return;
+	}
+	else if (str.at(0) == '-')
 	{
 		number = str.substr(1);
 		is_negative = true;
@@ -154,7 +162,7 @@ BigInt operator-(const BigInt &lhs, const BigInt &rhs)
 	}
 }
 
-BigInt & BigInt::operator-=(const BigInt & rhs)
+BigInt& BigInt::operator-=(const BigInt & rhs)
 {
 	*this = *this - rhs;
 	return *this;
@@ -166,6 +174,50 @@ BigInt BigInt::operator-() const
 	result.is_negative = !result.is_negative;
 
 	return result;
+}
+
+BigInt& operator*(const BigInt &lhs, const BigInt &rhs)
+{
+	if (lhs.is_negative)
+		if (!rhs.is_negative)
+			return -((-lhs) * rhs);
+		else
+			return (-lhs) * (-rhs);
+	else if (rhs.is_negative)
+		return -(lhs * (-rhs));
+	else
+	{
+		BigInt result;
+		
+		for (int i = rhs.number.size() - 1; i >= 0; i--)
+		{
+			std::string intermediate(rhs.number.size() - 1 - i, '0');
+			int carry = 0;
+			for (int j = lhs.number.size() - 1; j >= 0; j--)
+			{
+				int digit_mul = char_to_int(lhs.number[j]) * char_to_int(rhs.number[i]) + carry;
+				
+				if (digit_mul > 9)
+				{
+					carry = digit_mul / 10;
+					digit_mul %= 10;
+				}
+				else
+					carry = 0;
+				
+				intermediate.insert(intermediate.begin(), int_to_char(digit_mul));
+			}
+			
+			if (carry)
+				intermediate.insert(intermediate.begin(), int_to_char(carry));
+			
+			BigInt intermediate_num(intermediate);
+			
+			result += intermediate_num;
+		}
+		
+		return result;
+	}
 }
 
 bool operator>(const BigInt &lhs, const BigInt &rhs)

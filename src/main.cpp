@@ -6,10 +6,10 @@ int main()
 {
 	try
 	{
-		BigInt i("0");
-		BigInt j("-7");
+		BigInt i("36");
+		BigInt j("730");
 
-		i -= j;
+		std::cout << i * j;
 
 		std::cout << i << std::endl;
 	}
@@ -17,8 +17,6 @@ int main()
 	{
 		std::cerr << ex.what() << std::endl;
 	}
-
-	system("pause");
 
 	return 0;
 }
