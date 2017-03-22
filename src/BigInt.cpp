@@ -2,9 +2,7 @@
 
 #include <cstdlib>
 #include <cctype>
-#include <exception>
-
-#include <iostream>
+#include <exception
 
 static void make_equal_length(std::string &str1, std::string &str2)
 {
