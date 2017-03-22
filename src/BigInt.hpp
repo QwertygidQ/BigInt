@@ -18,7 +18,8 @@ public:
 	BigInt& operator-=(const BigInt &rhs);
 	BigInt operator-() const;
 	
-	friend BigInt& operator*(const BigInt &lhs, const BigInt &rhs); 
+	friend BigInt operator*(const BigInt &lhs, const BigInt &rhs); 
+	BigInt& operator*=(const BigInt &rhs);
 
 	friend bool operator>(const BigInt &lhs, const BigInt& rhs);
 	friend bool operator<(const BigInt &lhs, const BigInt& rhs);

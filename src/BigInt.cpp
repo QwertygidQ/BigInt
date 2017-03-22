@@ -176,7 +176,7 @@ BigInt BigInt::operator-() const
 	return result;
 }
 
-BigInt& operator*(const BigInt &lhs, const BigInt &rhs)
+BigInt operator*(const BigInt &lhs, const BigInt &rhs)
 {
 	if (lhs.is_negative)
 		if (!rhs.is_negative)
@@ -218,6 +218,12 @@ BigInt& operator*(const BigInt &lhs, const BigInt &rhs)
 		
 		return result;
 	}
+}
+
+BigInt& BigInt::operator*=(const BigInt &rhs)
+{
+	*this = *this * rhs;
+	return *this;
 }
 
 bool operator>(const BigInt &lhs, const BigInt &rhs)

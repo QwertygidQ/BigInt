@@ -6,10 +6,10 @@ int main()
 {
 	try
 	{
-		BigInt i("36");
-		BigInt j("730");
-
-		std::cout << i * j;
+		BigInt i("16");
+		BigInt j("32");
+		
+		i *= j;
 
 		std::cout << i << std::endl;
 	}
