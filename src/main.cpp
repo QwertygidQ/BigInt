@@ -1,4 +1,5 @@
 #include <iostream>
+#include <windows.h>
 
 #include "BigInt.hpp"
 
@@ -6,9 +7,9 @@ int main()
 {
 	try
 	{
-		BigInt i("16");
-		BigInt j("32");
-		
+		BigInt i(16);
+		BigInt j(32);
+
 		i *= j;
 
 		std::cout << i << std::endl;

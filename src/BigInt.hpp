@@ -8,6 +8,7 @@ class BigInt
 {
 public:
 	BigInt();
+	BigInt(const int num);
 	BigInt(const std::string &str);
 	BigInt(const BigInt &num);
 
@@ -17,8 +18,8 @@ public:
 	friend BigInt operator-(const BigInt &lhs, const BigInt& rhs);
 	BigInt& operator-=(const BigInt &rhs);
 	BigInt operator-() const;
-	
-	friend BigInt operator*(const BigInt &lhs, const BigInt &rhs); 
+
+	friend BigInt operator*(const BigInt &lhs, const BigInt &rhs);
 	BigInt& operator*=(const BigInt &rhs);
 
 	friend bool operator>(const BigInt &lhs, const BigInt& rhs);

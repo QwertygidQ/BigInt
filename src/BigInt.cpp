@@ -35,6 +35,9 @@ BigInt::BigInt() :
 	number("0"), is_negative(false)
 {}
 
+BigInt::BigInt(const int num) : BigInt(std::to_string(num))
+{}
+
 BigInt::BigInt(const std::string &str)
 {
 	if (str == "")
@@ -186,7 +189,7 @@ BigInt operator*(const BigInt &lhs, const BigInt &rhs)
 	else
 	{
 		BigInt result;
-		
+
 		for (int i = rhs.number.size() - 1; i >= 0; i--)
 		{
 			std::string intermediate(rhs.number.size() - 1 - i, '0');
@@ -194,7 +197,7 @@ BigInt operator*(const BigInt &lhs, const BigInt &rhs)
 			for (int j = lhs.number.size() - 1; j >= 0; j--)
 			{
 				int digit_mul = char_to_int(lhs.number[j]) * char_to_int(rhs.number[i]) + carry;
-				
+
 				if (digit_mul > 9)
 				{
 					carry = digit_mul / 10;
@@ -202,18 +205,18 @@ BigInt operator*(const BigInt &lhs, const BigInt &rhs)
 				}
 				else
 					carry = 0;
-				
+
 				intermediate.insert(intermediate.begin(), int_to_char(digit_mul));
 			}
-			
+
 			if (carry)
 				intermediate.insert(intermediate.begin(), int_to_char(carry));
-			
+
 			BigInt intermediate_num(intermediate);
-			
+
 			result += intermediate_num;
 		}
-		
+
 		return result;
 	}
 }
