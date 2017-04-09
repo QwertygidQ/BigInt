@@ -7,10 +7,10 @@ int main()
 {
 	try
 	{
-		BigInt i(16);
-		BigInt j(32);
+		BigInt i("-120");
+		BigInt j("3");
 
-		i *= j;
+		i /= j;
 
 		std::cout << i << std::endl;
 	}

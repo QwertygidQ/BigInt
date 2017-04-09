@@ -30,7 +30,6 @@ inline static char int_to_char(int i)
 	return i + '0';
 }
 
-
 BigInt::BigInt() :
 	number("0"), is_negative(false)
 {}
@@ -224,6 +223,54 @@ BigInt operator*(const BigInt &lhs, const BigInt &rhs)
 BigInt& BigInt::operator*=(const BigInt &rhs)
 {
 	*this = *this * rhs;
+	return *this;
+}
+
+BigInt operator/(const BigInt& lhs, const BigInt& rhs)
+{
+	if (lhs.is_negative)
+		if (!rhs.is_negative)
+			return -((-lhs) / rhs);
+		else
+			return (-lhs) / (-rhs);
+	else if (rhs.is_negative)
+		return -(lhs / (-rhs));
+	else
+	{
+		BigInt intermediate(std::string(1, lhs.number.at(0)));
+		for (size_t i = 1; i < lhs.number.size() && intermediate < rhs; i++)
+			intermediate.number += lhs.number.at(i);
+
+		if (intermediate < rhs)
+			return BigInt(0);
+
+		std::string result = "";
+
+		for (size_t i = intermediate.number.size(); i <= lhs.number.size(); i++)
+		{
+			int additions = 0;
+			BigInt approximation(rhs);
+
+			while (approximation < intermediate || approximation == intermediate) // maybe change for '<=' later?
+			{
+				approximation += rhs;
+				additions++;
+			}
+
+			result += int_to_char(additions);
+			intermediate -= additions * rhs;
+
+			if (i < lhs.number.size())
+				intermediate.number += lhs.number.at(i);
+		}
+
+		return BigInt(result);
+	}
+}
+
+BigInt& BigInt::operator/=(const BigInt& rhs)
+{
+	*this = *this / rhs;
 	return *this;
 }
 
