@@ -12,6 +12,8 @@ public:
 	BigInt(const std::string &str);
 	BigInt(const BigInt &num);
 
+	friend BigInt abs(const BigInt &lhs);
+
 	friend BigInt operator+(const BigInt &lhs, const BigInt& rhs);
 	BigInt& operator+=(const BigInt &rhs);
 
@@ -22,12 +24,18 @@ public:
 	friend BigInt operator*(const BigInt &lhs, const BigInt &rhs);
 	BigInt& operator*=(const BigInt &rhs);
 
+	friend BigInt operator^(const BigInt &lhs, const BigInt &rhs); // power
+	BigInt operator^=(const BigInt &rhs);
+
 	friend BigInt operator/(const BigInt &lhs, const BigInt &rhs);
 	BigInt& operator/=(const BigInt &rhs);
 
 	friend bool operator>(const BigInt &lhs, const BigInt& rhs);
+	friend bool operator>=(const BigInt &lhs, const BigInt& rhs);
 	friend bool operator<(const BigInt &lhs, const BigInt& rhs);
+	friend bool operator<=(const BigInt &lhs, const BigInt& rhs);
 	friend bool operator==(const BigInt &lhs, const BigInt& rhs);
+	friend bool operator!=(const BigInt &lhs, const BigInt& rhs);
 
 	friend std::ostream& operator<<(std::ostream& os, const BigInt &num);
 

@@ -79,6 +79,14 @@ BigInt::BigInt(const BigInt &num) :
 	number(num.number), is_negative(num.is_negative)
 {}
 
+BigInt abs(const BigInt &lhs)
+{
+	BigInt result(lhs);
+	result.is_negative = false;
+
+	return result;
+}
+
 BigInt operator+(const BigInt &lhs, const BigInt &rhs)
 {
 	if (lhs.is_negative)
@@ -226,6 +234,31 @@ BigInt& BigInt::operator*=(const BigInt &rhs)
 	return *this;
 }
 
+BigInt operator^(const BigInt &lhs, const BigInt &rhs)
+{
+	if (rhs < 0)
+		throw std::runtime_error("Negative powers are not supported");
+	else if (lhs == 0)
+		if (rhs == 0)
+			throw std::runtime_error("0^0 is undefined");
+		else
+			return BigInt(0);
+	else if (lhs == 1 || rhs == 0)
+		return BigInt(1);
+
+	BigInt result(lhs);
+	for (BigInt i(1); i < rhs; i += 1) // change to ++?
+		result *= lhs;
+
+	return result;
+}
+
+BigInt BigInt::operator^=(const BigInt &rhs)
+{
+	*this = *this ^ rhs;
+	return *this;
+}
+
 BigInt operator/(const BigInt& lhs, const BigInt& rhs)
 {
 	if (lhs.is_negative)
@@ -251,7 +284,7 @@ BigInt operator/(const BigInt& lhs, const BigInt& rhs)
 			int additions = 0;
 			BigInt approximation(rhs);
 
-			while (approximation < intermediate || approximation == intermediate) // maybe change for '<=' later?
+			while (approximation <= intermediate)
 			{
 				approximation += rhs;
 				additions++;
@@ -305,6 +338,11 @@ bool operator>(const BigInt &lhs, const BigInt &rhs)
 	}
 }
 
+bool operator>=(const BigInt & lhs, const BigInt & rhs)
+{
+	return (lhs > rhs) || (lhs == rhs);
+}
+
 bool operator<(const BigInt &lhs, const BigInt &rhs)
 {
 	if (lhs.is_negative && !rhs.is_negative)
@@ -336,9 +374,19 @@ bool operator<(const BigInt &lhs, const BigInt &rhs)
 	}
 }
 
+bool operator<=(const BigInt & lhs, const BigInt & rhs)
+{
+	return (lhs < rhs) || (lhs == rhs);
+}
+
 bool operator==(const BigInt &lhs, const BigInt &rhs)
 {
 	return (lhs.is_negative == rhs.is_negative) && (lhs.number == rhs.number);
+}
+
+bool operator!=(const BigInt & lhs, const BigInt & rhs)
+{
+	return (lhs.is_negative != rhs.is_negative) || (lhs.number != rhs.number);
 }
 
 std::ostream& operator<<(std::ostream& os, const BigInt& num)
