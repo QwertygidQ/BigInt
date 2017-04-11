@@ -3,6 +3,7 @@
 
 #include <string>
 #include <ostream>
+#include <utility>
 
 class BigInt
 {
@@ -31,6 +32,9 @@ public:
 	friend BigInt operator/(const BigInt &lhs, const BigInt &rhs);
 	BigInt& operator/=(const BigInt &rhs);
 
+    friend BigInt operator%(const BigInt &lhs, const BigInt &rhs);
+    BigInt& operator%=(const BigInt &rhs);
+
 	friend bool operator>(const BigInt &lhs, const BigInt& rhs);
 	friend bool operator>=(const BigInt &lhs, const BigInt& rhs);
 	friend bool operator<(const BigInt &lhs, const BigInt& rhs);
@@ -41,6 +45,9 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const BigInt &num);
 
 private:
+    friend std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs); // first - quotient; second - remainder
+    inline friend void fix_negative_zero(BigInt &lhs);
+
 	std::string number;
 	bool is_negative;
 };

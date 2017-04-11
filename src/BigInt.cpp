@@ -269,49 +269,23 @@ BigInt BigInt::operator^=(const BigInt &rhs)
 
 BigInt operator/(const BigInt& lhs, const BigInt& rhs)
 {
-	if (lhs.is_negative)
-		if (!rhs.is_negative)
-			return -((-lhs) / rhs);
-		else
-			return (-lhs) / (-rhs);
-	else if (rhs.is_negative)
-		return -(lhs / (-rhs));
-	else
-	{
-		BigInt intermediate(std::string(1, lhs.number.at(0)));
-		for (size_t i = 1; i < lhs.number.size() && intermediate < rhs; i++)
-			intermediate.number += lhs.number.at(i);
-
-		if (intermediate < rhs)
-			return BigInt(0);
-
-		std::string result = "";
-
-		for (size_t i = intermediate.number.size(); i <= lhs.number.size(); i++)
-		{
-			int additions = 0;
-			BigInt approximation(rhs);
-
-			while (approximation <= intermediate)
-			{
-				approximation += rhs;
-				additions++;
-			}
-
-			result += int_to_char(additions);
-			intermediate -= additions * rhs;
-
-			if (i < lhs.number.size())
-				intermediate.number += lhs.number.at(i);
-		}
-
-		return BigInt(result);
-	}
+	return division(lhs, rhs).first;
 }
 
 BigInt& BigInt::operator/=(const BigInt& rhs)
 {
 	*this = *this / rhs;
+	return *this;
+}
+
+BigInt operator%(const BigInt &lhs, const BigInt &rhs)
+{
+    return division(lhs, rhs).second;
+}
+
+BigInt& BigInt::operator%=(const BigInt& rhs)
+{
+	*this = *this % rhs;
 	return *this;
 }
 
@@ -402,3 +376,69 @@ std::ostream& operator<<(std::ostream& os, const BigInt& num)
 	return os << (num.is_negative ? "-" : "") << num.number;
 }
 
+std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs)
+{
+    std::pair<BigInt, BigInt> return_value;
+
+	if (lhs.is_negative)
+	{
+		if (!rhs.is_negative)
+		{
+            return_value = division(-lhs, rhs);
+            return_value.first = -return_value.first;
+        }
+		else
+            return_value = division(-lhs, -rhs);
+
+        return_value.second = -return_value.second;
+    }
+	else if (rhs.is_negative)
+	{
+        return_value = division(lhs, -rhs);
+        return_value.first = -return_value.first;
+    }
+	else
+	{
+		BigInt intermediate(std::string(1, lhs.number.at(0)));
+		for (size_t i = 1; i < lhs.number.size() && intermediate < rhs; i++)
+			intermediate.number += lhs.number.at(i);
+
+		if (intermediate < rhs)
+			return_value = std::make_pair(BigInt(0), lhs);
+        else
+        {
+            std::string result = "";
+
+            for (size_t i = intermediate.number.size(); i <= lhs.number.size(); i++)
+            {
+                int additions = 0;
+                BigInt approximation(rhs);
+
+                while (approximation <= intermediate)
+                {
+                    approximation += rhs;
+                    additions++;
+                }
+
+                result += int_to_char(additions);
+                intermediate -= additions * rhs;
+
+                if (i < lhs.number.size())
+                    intermediate.number += lhs.number.at(i);
+            }
+
+            return_value = std::make_pair(BigInt(result), intermediate);
+        }
+	}
+
+    fix_negative_zero(return_value.first);
+    fix_negative_zero(return_value.second);
+
+	return return_value;
+}
+
+inline void fix_negative_zero(BigInt &lhs)
+{
+    if (lhs.number == "0" && lhs.is_negative)
+        lhs.is_negative = false;
+}
