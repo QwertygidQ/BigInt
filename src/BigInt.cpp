@@ -87,6 +87,14 @@ BigInt abs(const BigInt &lhs)
 	return result;
 }
 
+BigInt fact(const BigInt &lhs)
+{
+    if (lhs == 0)
+        return 1;
+
+    return lhs * fact(lhs - 1);
+}
+
 BigInt operator+(const BigInt &lhs, const BigInt &rhs)
 {
 	if (lhs.is_negative)

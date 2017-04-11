@@ -12,9 +12,7 @@ int main()
 		std::cout << (i + j) << std::endl;
 		std::cout << (i - j) << std::endl;
 		std::cout << (i * j) << std::endl;
-		std::cout << (j / i) << std::endl;
-		std::cout << (BigInt(351) ^ BigInt(3)) << std::endl;
-		std::cout << fact(BigInt(8)) << std::endl;
+		std::cout << (i + j) << std::endl;
 	}
 	catch (const std::exception& ex)
 	{
