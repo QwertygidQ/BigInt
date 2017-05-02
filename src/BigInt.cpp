@@ -30,6 +30,14 @@ inline static char int_to_char(int i)
 	return i + '0';
 }
 
+inline static char base_10_not(char c)
+{
+    if (c < '0' || c > '9')
+		throw std::runtime_error("base_10_not() received a non-digit number");
+
+    return int_to_char(9 - char_to_int(c));
+}
+
 BigInt::BigInt() :
 	number("0"), is_negative(false)
 {}
@@ -93,6 +101,33 @@ BigInt fact(const BigInt &lhs)
         return 1;
 
     return lhs * fact(lhs - 1);
+}
+
+BigInt ones_complement_subtraction(const BigInt &lhs, const BigInt &rhs)
+{
+    if (rhs.is_negative)
+        return lhs + (-rhs);
+    else if (lhs.is_negative)
+        if (rhs.is_negative)
+            ones_complement_subtraction(-rhs, -lhs);
+        else
+            return -(-lhs + rhs);
+    else
+    {
+        const size_t digits =
+            (lhs.number.size() > rhs.number.size() ? lhs.number.size() : rhs.number.size()) + 2;
+
+        BigInt result(lhs + ones_complement(rhs, digits));
+
+        if (result.number.at(0) == '9')
+            result.to_normal_from_ones_complement();
+
+        result.number.erase(0, 1);
+
+        result.fix_trailing_zeroes();
+
+        return result;
+    }
 }
 
 BigInt operator+(const BigInt &lhs, const BigInt &rhs)
@@ -431,14 +466,61 @@ std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs)
         }
 	}
 
-    fix_negative_zero(return_value.first);
-    fix_negative_zero(return_value.second);
+    return_value.first.fix_negative_zero();
+    return_value.second.fix_negative_zero();
 
 	return return_value;
 }
 
-inline void fix_negative_zero(BigInt &lhs)
+inline void BigInt::fix_negative_zero()
 {
-    if (lhs.number == "0" && lhs.is_negative)
-        lhs.is_negative = false;
+    if (number == "0" && is_negative)
+        is_negative = false;
+}
+
+void BigInt::fix_trailing_zeroes()
+{
+    size_t zeroes = 0;
+
+    for (size_t i = 0; i < number.size(); i++)
+    {
+        if (number.at(i) == '0')
+            zeroes++;
+        else
+            break;
+    }
+
+    number.erase(0, zeroes);
+
+    if (number.size() == 0)
+        number = "0";
+}
+
+BigInt ones_complement(const BigInt &lhs, const size_t digits_num)
+{
+    const size_t delta = digits_num - lhs.number.size();
+    if (delta < 0)
+        throw std::runtime_error("A provided BigInt is too big to find one's complement of with " +
+                                    std::to_string(digits_num) + " digits");
+
+    BigInt result(lhs);
+
+    result.number.insert(0, delta, '9');
+
+    for(size_t i = delta; i < result.number.size(); i++)
+        result.number.at(i) = base_10_not(result.number.at(i));
+
+    result += 1;
+
+    return result;
+}
+
+void BigInt::to_normal_from_ones_complement()
+{
+    *this -= 1;
+
+    for (size_t i = 1; i < number.size(); i++)
+        number.at(i) = base_10_not(number.at(i));
+
+    is_negative = true;
 }
