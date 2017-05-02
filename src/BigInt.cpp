@@ -103,13 +103,13 @@ BigInt fact(const BigInt &lhs)
     return lhs * fact(lhs - 1);
 }
 
-BigInt ones_complement_subtraction(const BigInt &lhs, const BigInt &rhs)
+BigInt twos_complement_subtraction(const BigInt &lhs, const BigInt &rhs)
 {
     if (rhs.is_negative)
         return lhs + (-rhs);
     else if (lhs.is_negative)
         if (rhs.is_negative)
-            ones_complement_subtraction(-rhs, -lhs);
+            twos_complement_subtraction(-rhs, -lhs);
         else
             return -(-lhs + rhs);
     else
@@ -117,10 +117,10 @@ BigInt ones_complement_subtraction(const BigInt &lhs, const BigInt &rhs)
         const size_t digits =
             (lhs.number.size() > rhs.number.size() ? lhs.number.size() : rhs.number.size()) + 2;
 
-        BigInt result(lhs + ones_complement(rhs, digits));
+        BigInt result(lhs + twos_complement(rhs, digits));
 
         if (result.number.at(0) == '9')
-            result.to_normal_from_ones_complement();
+            result.to_normal_from_twos_complement();
 
         result.number.erase(0, 1);
 
@@ -496,7 +496,7 @@ void BigInt::fix_trailing_zeroes()
         number = "0";
 }
 
-BigInt ones_complement(const BigInt &lhs, const size_t digits_num)
+BigInt twos_complement(const BigInt &lhs, const size_t digits_num)
 {
     const size_t delta = digits_num - lhs.number.size();
     if (delta < 0)
@@ -515,7 +515,7 @@ BigInt ones_complement(const BigInt &lhs, const size_t digits_num)
     return result;
 }
 
-void BigInt::to_normal_from_ones_complement()
+void BigInt::to_normal_from_twos_complement()
 {
     *this -= 1;
 

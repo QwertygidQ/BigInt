@@ -15,7 +15,7 @@ public:
 
 	friend BigInt abs(const BigInt &lhs);
 	friend BigInt fact(const BigInt &lhs);
-	friend BigInt ones_complement_subtraction(const BigInt &lhs, const BigInt &rhs);
+	friend BigInt twos_complement_subtraction(const BigInt &lhs, const BigInt &rhs);
 
 	friend BigInt operator+(const BigInt &lhs, const BigInt& rhs);
 	BigInt& operator+=(const BigInt &rhs);
@@ -49,8 +49,8 @@ private:
     friend std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs); // first - quotient; second - remainder
     inline void fix_negative_zero();
     void fix_trailing_zeroes();
-    friend BigInt ones_complement(const BigInt &lhs, const size_t digits_num);
-    void to_normal_from_ones_complement();
+    friend BigInt twos_complement(const BigInt &lhs, const size_t digits_num);
+    void to_normal_from_twos_complement();
 
 
 	std::string number;
