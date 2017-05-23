@@ -411,6 +411,11 @@ std::ostream& operator<<(std::ostream& os, const BigInt& num)
 	return os << (num.is_negative ? "-" : "") << num.number;
 }
 
+std::string& BigInt::get_string_repr_ref()
+{
+    return number;
+}
+
 std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs)
 {
     std::pair<BigInt, BigInt> return_value;
@@ -524,3 +529,4 @@ void BigInt::to_normal_from_twos_complement()
 
     is_negative = true;
 }
+

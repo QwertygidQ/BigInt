@@ -45,6 +45,8 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const BigInt &num);
 
+	std::string& get_string_repr_ref();
+
 private:
     friend std::pair<BigInt, BigInt> division(const BigInt &lhs, const BigInt& rhs); // first - quotient; second - remainder
     inline void fix_negative_zero();
